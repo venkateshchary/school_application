@@ -1,0 +1,5 @@
+PyMySQL
+flask-cors
+flask_sqlalchemy
+flask_script
+flask_migrate
