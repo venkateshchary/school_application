@@ -1,8 +1,8 @@
-import sys
 import config1
-from PyQt5.QtWidgets import (QMainWindow, QLineEdit,
-                             QWidget, QLabel , QDialog,
-                             QVBoxLayout, QPushButton, QMessageBox)
+from PyQt5 import QtCore, QtNetwork
+from PyQt5.QtWidgets import (QLineEdit,
+                             QLabel, QDialog,
+                             QVBoxLayout, QPushButton, QMessageBox,)
 
 
 class Login(QDialog):
@@ -26,8 +26,21 @@ class Login(QDialog):
         layout.addWidget(self.buttonLogin)
 
     def handleLogin(self):
-        # TODO: Connect to flask application to check login credentials
-        if self.textName.text() == '12345' and self.textPass.text() == '12345@88':
+        postData = QtCore.QUrlQuery()
+        postData.addQueryItem("username", self.textName.text())
+        postData.addQueryItem("password", self.textPass.text())
+        qnam = QtNetwork.QNetworkAccessManager()
+        reply = qnam.post(QtNetwork.QNetworkRequest(QtCore.QUrl(config1.login_url)), postData.toString(QtCore.QUrl.FullyEncoded).encode())
+        loop = QtCore.QEventLoop()
+        reply.finished.connect(loop.quit)
+        loop.exec_()
+        code = reply.attribute(QtNetwork.QNetworkRequest.HttpStatusCodeAttribute)
+        if code == 200:
             self.accept()
         else:
-            QMessageBox.warning(self, 'Error', 'Bad user or password')
+            QMessageBox.warning(self, 'Error', 'User not Found or Password wrong')
+            self.textName.setText("")
+            self.textPass.setText("")
+
+
+

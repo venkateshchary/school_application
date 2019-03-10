@@ -1,25 +1,17 @@
 from app import app, db
 from flask import jsonify, request, Response
 from models import *
-from werkzeug.security import generate_password_hash, \
-     check_password_hash
+from werkzeug.security import check_password_hash
 
 
-@app.route('/login', methods=['GET'])
-def signup():
-    print("request:{0} --------request method:{1}".format(request, request.method))
-    print(request.json)
+@app.route('/login', methods=['POST'])
+def login():
     try:
-        print("-"*20)
-        print(request)
-        current_user = Users.query.filter_by(email=request.json['email'],).first()
-        print(Users.query.filter_by(email=request.json['email']).first())
-        if None == Users.query.filter_by(email=request.json['email']).first():
-            if current_user.check_password_hash(request.json["password"]):
+        current_user = Users.query.filter_by(username=request.form["username"],).first()
+        if Users.query.filter_by(username=request.form["username"]).first():
+            if check_password_hash(current_user.password, request.form["password"]):
                 return Response("user is logged in successfully", status=200)
-        elif Users.query.filter_by(email=request.json['email']).first():
-            return Response("user is already exist", status=409)
-
-    except Exception as e:
-        print(e)
-        return jsonify({"message":"LOGIN Failed"})
+        else:
+            return Response("user is does not exist", status=409)
+    except TypeError as e:
+        return jsonify({"Error@login": ":%s" % e})
