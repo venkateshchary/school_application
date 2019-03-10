@@ -3,6 +3,7 @@ from flask import jsonify, request, Response
 from models import *
 import re
 from flask_cors import CORS, cross_origin
+from signup import *
 
 def isValidEmail(email):
     if len(email) > 7:
@@ -18,3 +19,4 @@ def intro():
 @app.route('/')
 def home():
     return '<h2> WEL-COME</h2>'
+
