@@ -3,7 +3,7 @@ from app import db
 # from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, \
      check_password_hash
-import re
+from sqlalchemy import ForeignKey
 
 
 class Users(db.Model):
@@ -12,6 +12,7 @@ class Users(db.Model):
     password = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     renterpassword = db.Column(db.String(120), nullable=False)
+    location = db.Column(db.String(120), nullable=False)
 
     def __init__(self, username, password, email, renterpassword):
         self.username = username
@@ -29,3 +30,24 @@ class Users(db.Model):
         print(password, renterpassword)
         if password == renterpassword:
             return True
+
+
+class Batch(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+
+
+class Classes(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    batch_id = db.Column(db.Integer, ForeignKey('batch.id'))
+
+
+class Attendance(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    student_name = db.Column(db.String(100), nullable=False)
+    date = db.Column(db.DateTime(), nullable=False)
+    class_id = db.Column(db.Integer, ForeignKey('classes.id'))
+    batch_id = db.Column(db.Integer, ForeignKey('batch.id'))
+
+# TODO :CREATE A ABSTRACT DB MODEL

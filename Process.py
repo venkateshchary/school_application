@@ -1,10 +1,11 @@
 import config1
 from PyQt5.QtWidgets import (QMainWindow, QLineEdit,
-                             QLabel, QFormLayout, QHBoxLayout, QAction, qApp ,QDialog)
-from PyQt5.QtWidgets import QApplication, QPushButton
+                             QAction, qApp, QDialog, QPushButton)
+from PyQt5.QtWidgets import QApplication, QCalendarWidget
 from PyQt5.QtCore import pyqtSlot
 from PyQt5.QtGui import QIcon
 from login import Login
+import batchdate
 
 
 class App(QMainWindow):
@@ -22,18 +23,41 @@ class App(QMainWindow):
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
+        self.menubar()
+        self.calender()
+        self.root_buttons()
+        self.statusBar().showMessage('School Admin Tool')
+        self.show()
+
+    def root_buttons(self):
+        self.attendace_btn = QPushButton('Attendance', self)
+        self.attendace_btn.clicked.connect(self.class_btn)
+        self.attendace_btn.move(50, 30)
+        self.performance_btn = QPushButton('Performance', self)
+        self.performance_btn.clicked.connect(self.class_btn)
+        self.performance_btn.move(150, 30)
+        self.bonafide_btn = QPushButton('Bonafide', self)
+        self.bonafide_btn.clicked.connect(self.class_btn)
+        self.bonafide_btn.move(250, 30)
+
+    def class_btn(self):
+        pass
+
+
+    def calender(self):
+        self.cal = QCalendarWidget(self)
+        self.cal.resize(200, 150)
+        self.cal.setGridVisible(True)
+        self.cal.move(self.width-210, 25)
+
+    def menubar(self):
         exitAct = QAction(QIcon('exit.png'), '&Exit', self)
         exitAct.setShortcut('Ctrl+Q')
         exitAct.setStatusTip('Exit application')
         exitAct.triggered.connect(qApp.quit)
-        menubar = self.menuBar()
-        fileMenu = menubar.addMenu('&File')
-        fileMenu.addAction(exitAct)
-        self.statusBar().showMessage('School Admin Tool')
-        self.show()
 
-    def addbox_text(self):
-
+    def addbox_text(self,):
+        print("called: ", self.clicked_class.text())
         self.textGenerated = QLineEdit(self)
         self.textGenerated.move(5, 106)
         self.textGenerated.resize(self.width-10, 80)

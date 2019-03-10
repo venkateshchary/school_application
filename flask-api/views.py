@@ -4,6 +4,10 @@ from models import *
 import re
 from flask_cors import CORS, cross_origin
 from signup import *
+from loginview import *
+from attendanceview import *
+from batchview import *
+from classview import *
 
 def isValidEmail(email):
     if len(email) > 7:
